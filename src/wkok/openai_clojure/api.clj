@@ -1,5 +1,14 @@
 (ns wkok.openai-clojure.api
-  (:require [wkok.openai-clojure.core :as core]))
+  (:require [wkok.openai-clojure.core :as core]
+            [wkok.openai-clojure.openai :as openai]
+            [wkok.openai-clojure.azure :as azure]))
+
+
+
+(defn init-api-key [impl api-key]
+  (case impl 
+    :openai (openai/init-api-key api-key)
+    :azure (azure/init-api-key api-key) ))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Models

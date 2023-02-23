@@ -6,11 +6,17 @@
    [martian.core :as martian]
    [wkok.openai-clojure.sse :as sse]))
 
+(def api-key (atom nil))
+
+(defn init-api-key [k]
+ (reset! api-key k))
+
 (def add-authentication-header
   {:name ::add-authentication-header
    :enter (fn [ctx]
             (assoc-in ctx [:request :headers "api-key"]
-                      (System/getenv "AZURE_OPENAI_API_KEY")))})
+                      (or @api-key  (System/getenv "AZURE_OPENAI_API_KEY"))
+                      ))})
 
 
 (defn patch-handler [m]

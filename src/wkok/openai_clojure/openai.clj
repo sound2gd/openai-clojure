@@ -7,10 +7,15 @@
      [martian.yaml :as yaml]
      [wkok.openai-clojure.sse :as sse]))
 
+(def api-key (atom nil))
+
+(defn init-api-key [k]
+ (reset! api-key k))
+
 (def add-headers
   {:name ::add-headers
    :enter (fn [ctx]
-            (let [api-key (System/getenv "OPENAI_API_KEY")
+            (let [api-key (or @api-key  (System/getenv "OPENAI_API_KEY"))
                   organization (System/getenv "OPENAI_ORGANIZATION")]
               (update-in ctx [:request :headers]
                          (fn [headers]
